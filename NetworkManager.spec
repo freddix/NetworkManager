@@ -2,7 +2,7 @@
 
 Summary:	Network Manager for GNOME
 Name:		NetworkManager
-Version:	0.9.6.4
+Version:	0.9.8.0
 %if "%{gitver}" != "%{nil}"
 Release:	0.%{gitver}.1
 %else
@@ -12,10 +12,10 @@ License:	GPL v2
 Group:		Daemons
 %if "%{gitver}" != "%{nil}"
 Source0:	http://cgit.freedesktop.org/NetworkManager/NetworkManager/snapshot/%{name}-%{gitver}.tar.bz2
-# Source0-md5:	54ca5200edeb5155086ced43d00b0cad
+# Source0-md5:	38d28f6bd9220d85dfff47210706195c
 %else
 Source0:	ftp://ftp.gnome.org/pub/GNOME/sources/NetworkManager/0.9/%{name}-%{version}.tar.xz
-# Source0-md5:	54ca5200edeb5155086ced43d00b0cad
+# Source0-md5:	38d28f6bd9220d85dfff47210706195c
 %endif
 Source1:	%{name}-nm-system-settings.conf
 BuildRequires:	autoconf
@@ -110,6 +110,7 @@ NetworkManager API documentation.
 %{__autoconf}
 %{__automake}
 %configure \
+	--disable-silent-rules			\
 	--disable-static			\
 	--enable-more-warnings=no		\
 	--with-crypto=gnutls			\
@@ -158,14 +159,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/nm-online
 %attr(755,root,root) %{_bindir}/nm-tool
 %attr(755,root,root) %{_bindir}/nmcli
-%attr(755,root,root) %{_libexecdir}/nm-crash-logger
 %attr(755,root,root) %{_libexecdir}/nm-dhcp-client.action
 %attr(755,root,root) %{_libexecdir}/nm-dispatcher.action
 %attr(755,root,root) %{_sbindir}/NetworkManager
 %{systemdunitdir}/NetworkManager-wait-online.service
 %{systemdunitdir}/NetworkManager.service
 
-%dir %{_datadir}/%{name}
 %dir %{_datadir}/gnome-vpn-properties
 %dir %{_libexecdir}
 %dir %{_sysconfdir}/NetworkManager
@@ -173,13 +172,14 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/NetworkManager/dispatcher.d
 %dir %{_sysconfdir}/NetworkManager/system-connections
 
-%{_datadir}/%{name}/gdb-cmd
+%if 0
 %{_mandir}/man1/nm-online.1*
 %{_mandir}/man1/nm-tool.1*
 %{_mandir}/man1/nmcli.1*
 %{_mandir}/man5/NetworkManager.conf.5*
 %{_mandir}/man5/nm-system-settings.conf.5*
 %{_mandir}/man8/NetworkManager.8*
+%endif
 
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/NetworkManager/nm-system-settings.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/dbus-1/system.d/org.freedesktop.NetworkManager.conf
@@ -188,7 +188,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/dbus-1/system-services/org.freedesktop.NetworkManager.service
 %{_datadir}/dbus-1/system-services/org.freedesktop.nm_dispatcher.service
 %{_datadir}/polkit-1/actions/org.freedesktop.NetworkManager.policy
-#%{_datadir}/polkit-1/actions/org.freedesktop.network-manager-settings.system.policy
 
 %files autoipd
 %defattr(644,root,root,755)
