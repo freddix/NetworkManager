@@ -2,7 +2,7 @@
 
 Summary:	Network Manager for GNOME
 Name:		NetworkManager
-Version:	0.9.8.0
+Version:	0.9.8.2
 %if "%{gitver}" != "%{nil}"
 Release:	0.%{gitver}.1
 %else
@@ -12,10 +12,10 @@ License:	GPL v2
 Group:		Daemons
 %if "%{gitver}" != "%{nil}"
 Source0:	http://cgit.freedesktop.org/NetworkManager/NetworkManager/snapshot/%{name}-%{gitver}.tar.bz2
-# Source0-md5:	38d28f6bd9220d85dfff47210706195c
+# Source0-md5:	7ac4ee1652e77ba064a5e18dc7af7e25
 %else
 Source0:	ftp://ftp.gnome.org/pub/GNOME/sources/NetworkManager/0.9/%{name}-%{version}.tar.xz
-# Source0-md5:	38d28f6bd9220d85dfff47210706195c
+# Source0-md5:	7ac4ee1652e77ba064a5e18dc7af7e25
 %endif
 Source1:	%{name}-nm-system-settings.conf
 BuildRequires:	autoconf
@@ -162,6 +162,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libexecdir}/nm-dhcp-client.action
 %attr(755,root,root) %{_libexecdir}/nm-dispatcher.action
 %attr(755,root,root) %{_sbindir}/NetworkManager
+%{systemdunitdir}/NetworkManager-dispatcher.service
 %{systemdunitdir}/NetworkManager-wait-online.service
 %{systemdunitdir}/NetworkManager.service
 
@@ -172,14 +173,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/NetworkManager/dispatcher.d
 %dir %{_sysconfdir}/NetworkManager/system-connections
 
-%if 0
 %{_mandir}/man1/nm-online.1*
 %{_mandir}/man1/nm-tool.1*
 %{_mandir}/man1/nmcli.1*
 %{_mandir}/man5/NetworkManager.conf.5*
 %{_mandir}/man5/nm-system-settings.conf.5*
 %{_mandir}/man8/NetworkManager.8*
-%endif
 
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/NetworkManager/nm-system-settings.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/dbus-1/system.d/org.freedesktop.NetworkManager.conf
@@ -226,10 +225,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/vala/vapi/*.deps
 %{_datadir}/vala/vapi/*.vapi
 
-%if 0
 %files apidocs
 %defattr(644,root,root,755)
+%{_gtkdocdir}/NetworkManager
 %{_gtkdocdir}/libnm-glib
 %{_gtkdocdir}/libnm-util
-%endif
 
