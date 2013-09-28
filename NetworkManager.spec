@@ -6,7 +6,7 @@ Version:	0.9.8.4
 %if "%{gitver}" != "%{nil}"
 Release:	0.%{gitver}.1
 %else
-Release:	1
+Release:	2
 %endif
 License:	GPL v2
 Group:		Daemons
@@ -212,9 +212,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libnm-util.so
 %attr(755,root,root) %{_libdir}/libnm-glib.so
 %attr(755,root,root) %{_libdir}/libnm-glib-vpn.so
-%{_libdir}/libnm-util.la
-%{_libdir}/libnm-glib.la
-%{_libdir}/libnm-glib-vpn.la
 %{_includedir}/NetworkManager
 %{_includedir}/libnm-glib
 %{_pkgconfigdir}/NetworkManager.pc
