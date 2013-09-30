@@ -2,20 +2,20 @@
 
 Summary:	Network Manager for GNOME
 Name:		NetworkManager
-Version:	0.9.8.4
+Version:	0.9.8.6
 %if "%{gitver}" != "%{nil}"
 Release:	0.%{gitver}.1
 %else
-Release:	2
+Release:	1
 %endif
 License:	GPL v2
 Group:		Daemons
 %if "%{gitver}" != "%{nil}"
 Source0:	http://cgit.freedesktop.org/NetworkManager/NetworkManager/snapshot/%{name}-%{gitver}.tar.bz2
-# Source0-md5:	813aed441f1e43cfda7309fb6ba52d64
+# Source0-md5:	df8092e4f39b1547f16f2e78f7177ce4
 %else
 Source0:	ftp://ftp.gnome.org/pub/GNOME/sources/NetworkManager/0.9/%{name}-%{version}.tar.xz
-# Source0-md5:	813aed441f1e43cfda7309fb6ba52d64
+# Source0-md5:	df8092e4f39b1547f16f2e78f7177ce4
 %endif
 Source1:	%{name}-nm-system-settings.conf
 BuildRequires:	autoconf
@@ -115,7 +115,6 @@ NetworkManager API documentation.
 	--enable-more-warnings=no		\
 	--with-crypto=gnutls			\
 	--with-dhcpcd=/usr/sbin/dhcpcd		\
-	--with-distro=generic			\
 	--with-html-dir=%{_gtkdocdir}		\
 	--with-iptables=/usr/sbin/iptables	\
 	--with-system-ca-path=/etc/certs	\
