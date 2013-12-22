@@ -6,7 +6,7 @@ Version:	0.9.8.8
 %if "%{gitver}" != "%{nil}"
 Release:	0.%{gitver}.1
 %else
-Release:	1
+Release:	2
 %endif
 License:	GPL v2
 Group:		Daemons
