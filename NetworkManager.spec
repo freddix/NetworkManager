@@ -2,20 +2,20 @@
 
 Summary:	Network Manager for GNOME
 Name:		NetworkManager
-Version:	0.9.8.8
+Version:	0.9.8.9
 %if "%{gitver}" != "%{nil}"
 Release:	0.%{gitver}.1
 %else
-Release:	2
+Release:	1
 %endif
 License:	GPL v2
 Group:		Daemons
 %if "%{gitver}" != "%{nil}"
 Source0:	http://cgit.freedesktop.org/NetworkManager/NetworkManager/snapshot/%{name}-%{gitver}.tar.bz2
-# Source0-md5:	bad2486578aa9f4d2f5c1c1446e8daf4
+# Source0-md5:	6006d2527412c5efbea3c48aa11ead03
 %else
 Source0:	ftp://ftp.gnome.org/pub/GNOME/sources/NetworkManager/0.9/%{name}-%{version}.tar.xz
-# Source0-md5:	bad2486578aa9f4d2f5c1c1446e8daf4
+# Source0-md5:	6006d2527412c5efbea3c48aa11ead03
 %endif
 Source1:	%{name}-nm-system-settings.conf
 BuildRequires:	autoconf
@@ -132,8 +132,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/%{name}/{VPN,dispatcher.d,system-conne
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/nm-system-settings.conf
 
 # Cleanup
-rm -f $RPM_BUILD_ROOT%{_libexecdir}/*.la
-rm -f $RPM_BUILD_ROOT%{_libdir}/pppd/*/*.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/{,pppd/*/}*.la
 
 %find_lang %{name} --with-gnome --all-name
 
