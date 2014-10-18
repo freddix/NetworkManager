@@ -2,7 +2,7 @@
 
 Summary:	Network Manager for GNOME
 Name:		NetworkManager
-Version:	0.9.8.10
+Version:	0.9.10.0
 %if "%{gitver}" != "%{nil}"
 Release:	0.%{gitver}.1
 %else
@@ -12,12 +12,13 @@ License:	GPL v2
 Group:		Daemons
 %if "%{gitver}" != "%{nil}"
 Source0:	http://cgit.freedesktop.org/NetworkManager/NetworkManager/snapshot/%{name}-%{gitver}.tar.bz2
-# Source0-md5:	aad2558887e25417c52eb2deaade2f85
+# Source0-md5:	21b9051dbbd6434df4624a90ca9d71b6
 %else
 Source0:	ftp://ftp.gnome.org/pub/GNOME/sources/NetworkManager/0.9/%{name}-%{version}.tar.xz
-# Source0-md5:	aad2558887e25417c52eb2deaade2f85
+# Source0-md5:	21b9051dbbd6434df4624a90ca9d71b6
 %endif
 Source1:	%{name}-nm-system-settings.conf
+BuildRequires:	ModemManager-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	dbus-glib-devel
@@ -25,17 +26,18 @@ BuildRequires:	gettext-devel
 BuildRequires:	gobject-introspection-devel
 BuildRequires:	intltool
 BuildRequires:	libgcrypt-devel
+BuildRequires:	libndp-devel
 BuildRequires:	libnl-devel
 BuildRequires:	libtool
 BuildRequires:	pkg-config
 BuildRequires:	polkit-devel
 BuildRequires:	ppp-devel
 BuildRequires:	udev-glib-devel
-BuildRequires:	wireless-tools-devel
 Requires(post,preun,postun):	systemd-units
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dhcpcd
 Suggests:	crda
+Suggests:	resolvconf
 Suggests:	wpa_supplicant
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -132,7 +134,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/%{name}/{VPN,dispatcher.d,system-conne
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/nm-system-settings.conf
 
 # Cleanup
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/{,pppd/*/}*.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/{,%{name}/,pppd/*/}*.la
 
 %find_lang %{name} --with-gnome --all-name
 
@@ -155,36 +157,43 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS README TODO
 %attr(755,root,root) %{_bindir}/nm-online
-%attr(755,root,root) %{_bindir}/nm-tool
 %attr(755,root,root) %{_bindir}/nmcli
-%attr(755,root,root) %{_libexecdir}/nm-dhcp-client.action
-%attr(755,root,root) %{_libexecdir}/nm-dispatcher.action
 %attr(755,root,root) %{_sbindir}/NetworkManager
+%dir %{_libexecdir}
+%attr(755,root,root) %{_libexecdir}/nm-dhcp-helper
+%attr(755,root,root) %{_libexecdir}/nm-dispatcher
+
+%attr(755,root,root) %{_libdir}/%{name}/libnm-device-plugin-adsl.so
+%attr(755,root,root) %{_libdir}/%{name}/libnm-device-plugin-bluetooth.so
+%attr(755,root,root) %{_libdir}/%{name}/libnm-device-plugin-wifi.so
+%attr(755,root,root) %{_libdir}/%{name}/libnm-device-plugin-wwan.so
+%attr(755,root,root) %{_libdir}/%{name}/libnm-wwan.so
+
 %{systemdunitdir}/NetworkManager-dispatcher.service
 %{systemdunitdir}/NetworkManager-wait-online.service
 %{systemdunitdir}/NetworkManager.service
+%{systemdunitdir}/network-online.target.wants/NetworkManager-wait-online.service
 
-%dir %{_datadir}/gnome-vpn-properties
-%dir %{_libexecdir}
 %dir %{_sysconfdir}/NetworkManager
 %dir %{_sysconfdir}/NetworkManager/VPN
 %dir %{_sysconfdir}/NetworkManager/dispatcher.d
 %dir %{_sysconfdir}/NetworkManager/system-connections
-
-%{_mandir}/man1/nm-online.1*
-%{_mandir}/man1/nm-tool.1*
-%{_mandir}/man1/nmcli.1*
-%{_mandir}/man5/NetworkManager.conf.5*
-%{_mandir}/man5/nm-system-settings.conf.5*
-%{_mandir}/man8/NetworkManager.8*
-
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/NetworkManager/nm-system-settings.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/dbus-1/system.d/org.freedesktop.NetworkManager.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/dbus-1/system.d/nm-dhcp-client.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/dbus-1/system.d/nm-dispatcher.conf
+
+%dir %{_datadir}/gnome-vpn-properties
 %{_datadir}/dbus-1/system-services/org.freedesktop.NetworkManager.service
 %{_datadir}/dbus-1/system-services/org.freedesktop.nm_dispatcher.service
 %{_datadir}/polkit-1/actions/org.freedesktop.NetworkManager.policy
+
+%{_mandir}/man1/nm-online.1*
+%{_mandir}/man1/nmcli.1*
+%{_mandir}/man5/NetworkManager.conf.5*
+%{_mandir}/man5/nm-settings.5*
+%{_mandir}/man5/nm-system-settings.conf.5*
+%{_mandir}/man5/nmcli-examples.5*
+%{_mandir}/man8/NetworkManager.8*
 
 %files autoipd
 %defattr(644,root,root,755)
